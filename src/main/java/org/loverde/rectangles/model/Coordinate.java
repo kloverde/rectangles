@@ -1,13 +1,15 @@
 package org.loverde.rectangles.model;
 
+import java.util.Objects;
+
 /**
  * A Coordinate is an immutable pair of (x, y) values.  It's based on a coordinate system
  * which places (0,0) at the lower-left corner of the screen, hence the values are
  * greater than or equal to 0.
  */
 public class Coordinate {
-    private double x;
-    private double y;
+    private final double x;
+    private final double y;
 
     public Coordinate(final double x, final double y) {
         if(x < 0) {
@@ -28,5 +30,20 @@ public class Coordinate {
 
     public double getY() {
         return y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Coordinate that = (Coordinate) o;
+
+        return Double.compare(that.getX(), getX()) == 0 && Double.compare(that.getY(), getY()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getX(), getY());
     }
 }

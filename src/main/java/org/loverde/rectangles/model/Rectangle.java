@@ -2,12 +2,12 @@ package org.loverde.rectangles.model;
 
 public class Rectangle {
 
-    private double x1;
-    private double x2;
-    private double y1;
-    private double y2;
-    private double width;
-    private double height;
+    private final double x1;
+    private final double x2;
+    private final double y1;
+    private final double y2;
+    private final double width;
+    private final double height;
 
     /**
      * Create a rectangle based on a coordinate system where the lower left corner of the screen is the origin (0,0).
@@ -74,14 +74,22 @@ public class Rectangle {
         return y2;
     }
 
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
     /**
      * @return The complete set of coordinates of the rectangle, in the following order:
-     *         lower left; upper left; upper right; lower right
+     *         bottom left; top left; top right; bottom right
      */
     public Coordinate[] getCoordinates() {
         return new Coordinate[]{
             new Coordinate(x1, y1),
-            new Coordinate(x2, y1),
+            new Coordinate(x1, y2),
             new Coordinate(x2, y2),
             new Coordinate(x2, y1)
         };
