@@ -1,4 +1,4 @@
-package org.loverde.rectangles.model;
+package org.loverde.rectangles;
 
 import java.util.ArrayList;
 import java.util.List;

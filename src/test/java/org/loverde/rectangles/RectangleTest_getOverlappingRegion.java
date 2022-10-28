@@ -1,4 +1,4 @@
-package org.loverde.rectangles.model;
+package org.loverde.rectangles;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
