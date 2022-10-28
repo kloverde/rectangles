@@ -6,6 +6,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RectangleTest_hasContainmentWith {
 
+    @Test
+    public void hasContainmentWith_nullRectangle() {
+        final Rectangle r = new Rectangle(
+            new Point(2, 17),
+            new Point(10, 22)
+        );
+
+        final Exception ex = assertThrows(IllegalArgumentException.class, () -> r.hasContainmentWith(null));
+
+        assertEquals("hasContainmentWith:  rectangle cannot be null", ex.getMessage());
+    }
+
     // See inset_rectangles.png set 1.  This has containment.
     @Test
     public void hasContainmentWith_true() {

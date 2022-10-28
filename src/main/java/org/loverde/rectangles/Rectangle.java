@@ -1,5 +1,6 @@
 package org.loverde.rectangles;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -60,19 +61,23 @@ public class Rectangle {
     }
 
     /**
-     * Gets A rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>.  This is
+     * Gets the rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>.  This is
      * NOT a list of the points of intersection, though either 2 or 4 of these vertices ARE the points of intersection.
      * To get just the points of intersection, use {@link #getIntersectionsWith}.
      *
      * @param r The rectangle to calculate the overlap with
      *
-     * @return A rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>, or
+     * @return The rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>, or
      *         <em>null</em> if there is no shared region.
+     *
+     * @throws IllegalArgumentException If <em>r</em> is null
      */
-    public Rectangle getOverlappingRegion(final Rectangle r) {
+    public Rectangle getOverlappingRegionWith(final Rectangle r) {
+        if(r == null) throw new IllegalArgumentException("getOverlappingRegionWith:  rectangle cannot be null");
+
         if(equals(r)) return this;  // Perfectly aligned, identical rectangles can exit early
 
-        // To visualize what this algorithm is doing, look at rectangles 1 and 2 in junit_diagram.png.
+        // To visualize what this algorithm is doing, look at rectangles 1 and 2 in intersections.png.
         //
         // GETTING THE X VALUE OF THE ORIGIN (BOTTOM LEFT VERTEX):
         //
@@ -130,31 +135,36 @@ public class Rectangle {
      *
      * @param r2 The rectangle to get intersections with
      *
-     * @return Array containing 0, 2 or 4 points of intersection.  This method never returns null.
+     * @return An unmodifiable set containing 0, 2 or 4 points of intersection.  This method never returns null.
+     *
+     * @throws IllegalArgumentException If <em>r2</em> is null
      */
     public Set<Point> getIntersectionsWith(final Rectangle r2) {
-        final Rectangle iRect = getOverlappingRegion(r2);
+        if(r2 == null) throw new IllegalArgumentException("getIntersectionsWith:  rectangle cannot be null");
+
+        final Set<Point> intersections = new HashSet<>();
+        final Rectangle overlap = getOverlappingRegionWith(r2);
 
         // Okay, we have the overlap region, but which vertices are intersecting?  It could be 2 or all 4.
         // Intersections will have either an X value or a Y value in common.  If they have both in common,
         // then they have touching vertices, and thus are not intersecting.  So, it's either one or the
         // other.
 
-        final double r1x1 = getLowerLeft().getX();
-        final double r1y1 = getLowerLeft().getY();
-        final double r1x2 = getLowerRight().getX();
-        final double r1y2 = getLowerRight().getY();
+        if(overlap != null) {
+            final double r1x1 = getLowerLeft().getX();
+            final double r1y1 = getLowerLeft().getY();
+            final double r1x2 = getLowerRight().getX();
+            final double r1y2 = getLowerRight().getY();
 
-        final double r2x1 = r2.getLowerLeft().getX();
-        final double r2y1 = r2.getLowerLeft().getY();
-        final double r2x2 = r2.getUpperRight().getX();
-        final double r2y2 = r2.getUpperRight().getY();
-
-        final Set<Point> intersections = new HashSet<>();
-
+            final double r2x1 = r2.getLowerLeft().getX();
+            final double r2y1 = r2.getLowerLeft().getY();
+            final double r2x2 = r2.getUpperRight().getX();
+            final double r2y2 = r2.getUpperRight().getY();
 
 
-        return intersections;
+        }
+
+        return Collections.unmodifiableSet(intersections);
     }
 
     /**
@@ -164,8 +174,12 @@ public class Rectangle {
      * @param r2 The rectangle to test containment with
      *
      * @return True if containment exists, false if not
+     *
+     * @throws IllegalArgumentException If <em>r2</em> is null
      */
     public boolean hasContainmentWith(final Rectangle r2) {
+        if(r2 == null) throw new IllegalArgumentException("hasContainmentWith:  rectangle cannot be null");
+
         final double thisLeftX = getLowerLeft().getX();
         final double thisRightX = getLowerRight().getX();
         final double thisBottomY = getLowerLeft().getY();

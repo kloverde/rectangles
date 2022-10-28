@@ -14,6 +14,12 @@ public class RectangleTest_getIntersectionsWith {
         new Point(17, 14)
     );
 
+    @Test
+    public void getIntersectionsWith_nullRectangle() {
+        final Exception e = assertThrows(IllegalArgumentException.class, () -> r1.getIntersectionsWith(null));
+        assertEquals("getIntersectionsWith:  rectangle cannot be null", e.getMessage());
+    }
+
     // See intersections.png #1
     @Test
     public void getIntersectionsWith_1() {
