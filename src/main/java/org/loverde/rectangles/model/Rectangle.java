@@ -160,14 +160,19 @@ public class Rectangle {
         final double r2BottomY = r2.getLowerLeft().getY();
         final double r2TopY = r2.getUpperRight().getY();
 
+        // It's not enough to check that a left origin (bottom left) is less than another.  To know
+        // that it's contained, one has to be less than another AND it has to be bounded by the
+        // right side.  This is represented by the longer comparisons below, (unnecessarily) wrapped
+        // in parentheses.
+
         final boolean thisContainsR2 =
-            thisLeftX   < r2LeftX   &&
+            (thisLeftX  < r2LeftX   && r2LeftX < thisRightX) &&
             thisRightX  > r2RightX  &&
             thisBottomY < r2BottomY &&
             thisTopY    > r2TopY;
 
         final boolean r2ContainsThis =
-            r2LeftX   < thisLeftX   &&
+            (r2LeftX  < thisLeftX   && thisLeftX < r2RightX)  &&
             r2RightX  > thisRightX  &&
             r2BottomY < thisBottomY &&
             r2TopY    > thisTopY;

@@ -292,16 +292,16 @@ public class RectangleTest {
     }
 
     // See inset_rectangles.png set 7.  No containment.
-    //@Test
+    @Test
     public void hasContainmentWith_false_completelySeparated() {
         final Rectangle r1 = new Rectangle(
-            new Point(2, 10),
+            new Point(2, 4),
             new Point(6, 10)
         );
 
         final Rectangle r2 = new Rectangle(
-            new Point(7, 10),
-            new Point(10, 10)
+            new Point(7, 5),
+            new Point(10, 9)
         );
 
         assertFalse(r1.hasContainmentWith(r2));
