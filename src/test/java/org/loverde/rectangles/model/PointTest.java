@@ -6,36 +6,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-public class CoordinateTest {
+public class PointTest {
 
     @Test
     public void constructor_fail_xIsNegative() {
-        final Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Rectangle(
-                new Coordinate(-Double.MIN_VALUE, 0),
-                10,
-                20
-            );
-        });
+        final Exception ex = assertThrows(IllegalArgumentException.class, () -> new Point(-Double.MIN_VALUE, 0));
 
         assertEquals("x must be greater than or equal to 0", ex.getMessage());
     }
 
     @Test
     public void constructor_fail_yIsNegative() {
-        final Exception ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Coordinate(10, -Double.MIN_VALUE);
-        });
+        final Exception ex = assertThrows(IllegalArgumentException.class, () -> new Point(10, -Double.MIN_VALUE));
 
         assertEquals("y must be greater than or equal to 0", ex.getMessage());
     }
 
     @Test
     public void constructor_success_xZeroYZero() {
-        final Coordinate coord = new Coordinate(0, 0);
+        final Point p = new Point(0, 0);
 
-        assertEquals(0, coord.getX());
-        assertEquals(0, coord.getY());
+        assertEquals(0, p.getX());
+        assertEquals(0, p.getY());
     }
 
     @Test
@@ -43,9 +35,9 @@ public class CoordinateTest {
         final double x = 10.263;
         final double y = 16.7321;
 
-        final Coordinate coord = new Coordinate(x, y);
+        final Point p = new Point(x, y);
 
-        assertEquals(x, coord.getX());
-        assertEquals(y, coord.getY());
+        assertEquals(x, p.getX());
+        assertEquals(y, p.getY());
     }
 }
