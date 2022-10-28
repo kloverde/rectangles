@@ -1,1 +1,7 @@
-![Diagram representing Appendix 1, intersection](junit_diagram.png "Intersection")
+# Intersection
+
+![Diagram representing Appendix 1: Intersection](intersection.png "Intersection")
+
+# Containment
+
+![Diagram representing Appendix 2: Containment](inset_rectangles.png "Containment")

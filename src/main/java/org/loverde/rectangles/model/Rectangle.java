@@ -1,5 +1,8 @@
 package org.loverde.rectangles.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Rectangle {
 
     private final Point lowerLeft;
@@ -109,13 +112,66 @@ public class Rectangle {
         return new Rectangle(iRectLowerLeft, iRectUpperRight);
     }
 
-    public Point[] getIntersectionsWith(final Rectangle r) {
-        final Rectangle iRect = getOverlappingRegion(r);
+    public Point[] getIntersectionsWith(final Rectangle r2) {
+        final Rectangle iRect = getOverlappingRegion(r2);
 
         // Okay, we have the overlap region, but which vertices are intersecting?  It could be 2 or all 4.
-        // Intersections will have either an X value or a Y value in common with
+        // Intersections will have either an X value or a Y value in common.  If they have both in common,
+        // then they have touching vertices, and thus are not intersecting.  So, it's either one or the
+        // other.
 
+        final double r1x1 = getLowerLeft().getX();
+        final double r1y1 = getLowerLeft().getY();
+        final double r1x2 = getLowerRight().getX();
+        final double r1y2 = getLowerRight().getY();
 
+        final double r2x1 = r2.getLowerLeft().getX();
+        final double r2y1 = r2.getLowerLeft().getY();
+        final double r2x2 = r2.getUpperRight().getX();
+        final double r2y2 = r2.getUpperRight().getY();
+
+        final List<Point> intersections = new ArrayList<>();
+/*
+        if(
+
+        ) {
+
+        }
+*/
         return null;
+    }
+
+    /**
+     * Determines whether this rectangle and <em>r2</em> have containment.  Containment is defined as either rectangle
+     * completely encapsulating the other, with no shared edges.
+     *
+     * @param r2 The rectangle to test containment with
+     *
+     * @return True if containment exists, false if not
+     */
+    public boolean hasContainmentWith(final Rectangle r2) {
+        final double thisLeftX = getLowerLeft().getX();
+        final double thisRightX = getLowerRight().getX();
+        final double thisBottomY = getLowerLeft().getY();
+        final double thisTopY = getUpperRight().getY();
+
+        final double r2LeftX = r2.getLowerLeft().getX();
+        final double r2RightX = r2.getLowerRight().getX();
+        final double r2BottomY = r2.getLowerLeft().getY();
+        final double r2TopY = r2.getUpperRight().getY();
+
+        final boolean thisContainsR2 =
+            thisLeftX   < r2LeftX   &&
+            thisRightX  > r2RightX  &&
+            thisBottomY < r2BottomY &&
+            thisTopY    > r2TopY;
+
+        final boolean r2ContainsThis =
+            r2LeftX   < thisLeftX   &&
+            r2RightX  > thisRightX  &&
+            r2BottomY < thisBottomY &&
+            r2TopY    > thisTopY;
+
+        return thisContainsR2 || r2ContainsThis;
     }
 }
