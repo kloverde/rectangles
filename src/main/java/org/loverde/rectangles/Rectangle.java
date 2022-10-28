@@ -1,7 +1,7 @@
 package org.loverde.rectangles;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 public class Rectangle {
@@ -125,7 +125,14 @@ public class Rectangle {
         return overlap;
     }
 
-    public Point[] getIntersectionsWith(final Rectangle r2) {
+    /**
+     * Gets all points of intersection between this rectangle and another.
+     *
+     * @param r2 The rectangle to get intersections with
+     *
+     * @return Array containing 0, 2 or 4 points of intersection.  This method never returns null.
+     */
+    public Set<Point> getIntersectionsWith(final Rectangle r2) {
         final Rectangle iRect = getOverlappingRegion(r2);
 
         // Okay, we have the overlap region, but which vertices are intersecting?  It could be 2 or all 4.
@@ -143,10 +150,11 @@ public class Rectangle {
         final double r2x2 = r2.getUpperRight().getX();
         final double r2y2 = r2.getUpperRight().getY();
 
-        final List<Point> intersections = new ArrayList<>();
+        final Set<Point> intersections = new HashSet<>();
 
 
-        return null;
+
+        return intersections;
     }
 
     /**
