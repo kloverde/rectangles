@@ -165,7 +165,7 @@ public class RectangleTest {
 
     // See junit_diagram.png, rectangle #5.  This time, there are four points of intersection.
     @Test
-    public void getOverlappingRegion_fromFourPointsOfIntersection() {
+    public void getOverlappingRegion_fromFourPointsOfIntersection1() {
         final Rectangle r2 = new Rectangle(
             new Point(9, 1),
             new Point(11, 15)
@@ -177,5 +177,21 @@ public class RectangleTest {
         assertEquals(new Point(9, 14), iRect.getUpperLeft());
         assertEquals(new Point(11, 14), iRect.getUpperRight());
         assertEquals(new Point(11, 2), iRect.getLowerRight());
+    }
+
+    // See junit_diagram.png, rectangle #6.  This time, there are four points of intersection.
+    @Test
+    public void getOverlappingRegion_fromFourPointsOfIntersection2() {
+        final Rectangle r2 = new Rectangle(
+            new Point(4, 9),
+            new Point(17, 10)
+        );
+
+        final Rectangle iRect = r1.getOverlappingRegion(r2);
+
+        assertEquals(new Point(4, 9), iRect.getLowerLeft());
+        assertEquals(new Point(4, 10), iRect.getUpperLeft());
+        assertEquals(new Point(17, 10), iRect.getUpperRight());
+        assertEquals(new Point(17, 9), iRect.getLowerRight());
     }
 }
