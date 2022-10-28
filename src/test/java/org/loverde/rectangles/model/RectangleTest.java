@@ -195,6 +195,40 @@ public class RectangleTest {
         assertEquals(new Point(17, 9), iRect.getLowerRight());
     }
 
+    // See intersection.png, rectangle #7.  There are no overlapping regions.
+    @Test
+    public void getOverlappingRegion_noIntersection() {
+        final Rectangle r2 = new Rectangle(
+            new Point(5,1),
+            new Point(8, 2)
+        );
+
+        assertNull(r1.getOverlappingRegion(r2));
+    }
+
+    // See intersection.png, rectangle #8.  There are no overlapping regions.
+    @Test
+    public void getOverlappingRegion_noIntersection2() {
+        final Rectangle r2 = new Rectangle(
+            new Point(5,0),
+            new Point(8, 1)
+        );
+
+        assertNull(r1.getOverlappingRegion(r2));
+    }
+
+    // If two identical rectangles are perfectly overlaid, they are regarded as overlapping
+    @Test
+    public void getOverlappingRegion_perfectlyOverlapped() {
+        assertEquals(r1, r1.getOverlappingRegion(r1));
+    }
+
+    //
+    @Test
+    public void getIntersectionsWith() {
+       // final Rectangle r1
+    }
+
     // See inset_rectangles.png set 1.  This has containment.
     @Test
     public void hasContainmentWith_true() {

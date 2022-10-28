@@ -2,6 +2,7 @@ package org.loverde.rectangles.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Rectangle {
 
@@ -65,9 +66,12 @@ public class Rectangle {
      *
      * @param r The rectangle to calculate the overlap with
      *
-     * @return A rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>
+     * @return A rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>, or
+     *         <em>null</em> if there is no shared region.
      */
     public Rectangle getOverlappingRegion(final Rectangle r) {
+        if(equals(r)) return this;  // Perfectly aligned, identical rectangles can exit early
+
         // To visualize what this algorithm is doing, look at rectangles 1 and 2 in junit_diagram.png.
         //
         // GETTING THE X VALUE OF THE ORIGIN (BOTTOM LEFT VERTEX):
@@ -109,7 +113,16 @@ public class Rectangle {
             Math.min(upperRight.getY(), r.upperRight.getY())
         );
 
-        return new Rectangle(iRectLowerLeft, iRectUpperRight);
+        Rectangle overlap = null;
+
+        try {
+            overlap = new Rectangle(iRectLowerLeft, iRectUpperRight);
+        } catch(IllegalArgumentException e) {
+            // If we've attempted to create a rectangle that's not normalized, it's
+            // because there's no intersection.  Allow null to be returned.
+        }
+
+        return overlap;
     }
 
     public Point[] getIntersectionsWith(final Rectangle r2) {
@@ -131,13 +144,8 @@ public class Rectangle {
         final double r2y2 = r2.getUpperRight().getY();
 
         final List<Point> intersections = new ArrayList<>();
-/*
-        if(
 
-        ) {
 
-        }
-*/
         return null;
     }
 
@@ -178,5 +186,20 @@ public class Rectangle {
             r2TopY    > thisTopY;
 
         return thisContainsR2 || r2ContainsThis;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Rectangle rectangle = (Rectangle) o;
+
+        return getLowerLeft().equals(rectangle.getLowerLeft()) && getUpperRight().equals(rectangle.getUpperRight());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getLowerLeft(), getUpperRight());
     }
 }
