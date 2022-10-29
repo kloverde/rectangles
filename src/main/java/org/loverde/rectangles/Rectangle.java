@@ -68,7 +68,7 @@ public class Rectangle {
      * @param r The rectangle to calculate the overlap with
      *
      * @return The rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>, or
-     *         <em>null</em> if there is no shared region.
+     *         <em>null</em> if there is no intersection.
      *
      * @throws IllegalArgumentException If <em>r</em> is null
      */
@@ -209,6 +209,14 @@ public class Rectangle {
             r2TopY    > thisTopY;
 
         return thisContainsR2 || r2ContainsThis;
+    }
+
+    public boolean isAdjacentTo(final Rectangle r) {
+        if(equals(r)) return true;  // Identical, perfectly overlaid rectangles can exit early
+
+        // TODO
+
+        return false;
     }
 
     private static boolean isPointOnAnEdgeOf(final Point p, final Rectangle r) {
