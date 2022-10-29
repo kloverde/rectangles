@@ -193,7 +193,7 @@ public class Rectangle {
 
         // It's not enough to check that a left origin (bottom left) is less than another.  To know
         // that it's contained, one has to be less than another AND it has to be bounded by the
-        // right side.  This is represented by the longer comparisons below, (unnecessarily) wrapped
+        // right side.  This is represented by the longer comparisons below, wrapped (needlessly)
         // in parentheses.
 
         final boolean thisContainsR2 =
