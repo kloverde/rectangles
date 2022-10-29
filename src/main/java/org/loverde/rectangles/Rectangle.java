@@ -63,7 +63,7 @@ public class Rectangle {
     /**
      * Gets the rectangle representing the region of overlap between this rectangle and rectangle <em>r</em>.  This is
      * NOT a list of the points of intersection, though either 2 or 4 of these vertices ARE the points of intersection.
-     * To get just the points of intersection, use {@link #getIntersectionsWith}.
+     * To get just the points of intersection, use {@link #getIntersectingPoints}.
      *
      * @param r The rectangle to calculate the overlap with
      *
@@ -123,8 +123,8 @@ public class Rectangle {
         try {
             overlap = new Rectangle(iRectLowerLeft, iRectUpperRight);
         } catch(IllegalArgumentException e) {
-            // If we've attempted to create a rectangle that's not normalized, it's
-            // because there's no intersection.  Allow null to be returned.
+            // If we've attempted to create an invalid rectangle, that's because there's no
+            // intersection.  Allow null to be returned.
         }
 
         return overlap;
@@ -133,35 +133,36 @@ public class Rectangle {
     /**
      * Gets all points of intersection between this rectangle and another.
      *
-     * @param r2 The rectangle to get intersections with
+     * @param potentialIntersector The rectangle to get intersections with
      *
      * @return An unmodifiable set containing 0, 2 or 4 points of intersection.  This method never returns null.
      *
-     * @throws IllegalArgumentException If <em>r2</em> is null
+     * @throws IllegalArgumentException If <em>potentialIntersector</em> is null
      */
-    public Set<Point> getIntersectionsWith(final Rectangle r2) {
-        if(r2 == null) throw new IllegalArgumentException("getIntersectionsWith:  rectangle cannot be null");
+    public Set<Point> getIntersectingPoints(final Rectangle potentialIntersector) {
+        if(potentialIntersector == null) throw new IllegalArgumentException("getIntersectingPoints:  rectangle cannot be null");
 
         final Set<Point> intersections = new HashSet<>();
-        final Rectangle overlap = getOverlappingRegionWith(r2);
-
-        // Okay, we have the overlap region, but which vertices are intersecting?  It could be 2 or all 4.
-        // Intersections will have either an X value or a Y value in common.  If they have both in common,
-        // then they have touching vertices, and thus are not intersecting.  So, it's either one or the
-        // other.
+        final Rectangle overlap = getOverlappingRegionWith(potentialIntersector);
 
         if(overlap != null) {
-            final double r1x1 = getLowerLeft().getX();
-            final double r1y1 = getLowerLeft().getY();
-            final double r1x2 = getLowerRight().getX();
-            final double r1y2 = getLowerRight().getY();
+            // Okay, we have the overlap region, but which vertices are intersecting 'this'?  It could be 2 or all 4.
 
-            final double r2x1 = r2.getLowerLeft().getX();
-            final double r2y1 = r2.getLowerLeft().getY();
-            final double r2x2 = r2.getUpperRight().getX();
-            final double r2y2 = r2.getUpperRight().getY();
+            if(isPointOnAnEdgeOf(overlap.getLowerLeft(), this) && isPointOnAnEdgeOf(overlap.getLowerLeft(), potentialIntersector)) {
+                intersections.add(overlap.getLowerLeft());
+            }
 
+            if(isPointOnAnEdgeOf(overlap.getUpperLeft(), this) && isPointOnAnEdgeOf(overlap.getUpperLeft(), potentialIntersector)) {
+                intersections.add(overlap.getUpperLeft());
+            }
 
+            if(isPointOnAnEdgeOf(overlap.getUpperRight(), this) && isPointOnAnEdgeOf(overlap.getUpperRight(), potentialIntersector)) {
+                intersections.add(overlap.getUpperRight());
+            }
+
+            if(isPointOnAnEdgeOf(overlap.getLowerRight(), this) && isPointOnAnEdgeOf(overlap.getLowerRight(), potentialIntersector)) {
+                intersections.add(overlap.getLowerRight());
+            }
         }
 
         return Collections.unmodifiableSet(intersections);
@@ -208,6 +209,11 @@ public class Rectangle {
             r2TopY    > thisTopY;
 
         return thisContainsR2 || r2ContainsThis;
+    }
+
+    private static boolean isPointOnAnEdgeOf(final Point p, final Rectangle r) {
+        return p.getX() == r.getLowerLeft().getX() || p.getX() == r.getLowerRight().getX() ||
+               p.getY() == r.getUpperLeft().getY() || p.getY() == r.getLowerLeft().getY();
     }
 
     @Override
