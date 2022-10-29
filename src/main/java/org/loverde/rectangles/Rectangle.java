@@ -72,8 +72,8 @@ public class Rectangle {
      *
      * @throws IllegalArgumentException If <em>r</em> is null
      */
-    public Rectangle getOverlappingRegionWith(final Rectangle r) {
-        if(r == null) throw new IllegalArgumentException("getOverlappingRegionWith:  rectangle cannot be null");
+    public Rectangle getIntersection(final Rectangle r) {
+        if(r == null) throw new IllegalArgumentException("getIntersection:  rectangle cannot be null");
 
         if(equals(r)) return this;  // Perfectly aligned, identical rectangles can exit early
 
@@ -143,7 +143,7 @@ public class Rectangle {
         if(potentialIntersector == null) throw new IllegalArgumentException("getIntersectingPoints:  rectangle cannot be null");
 
         final Set<Point> intersections = new HashSet<>();
-        final Rectangle overlap = getOverlappingRegionWith(potentialIntersector);
+        final Rectangle overlap = getIntersection(potentialIntersector);
 
         if(overlap != null) {
             // Okay, we have the overlap region, but which vertices are intersecting 'this'?  It could be 2 or all 4.
@@ -169,46 +169,103 @@ public class Rectangle {
     }
 
     /**
-     * Determines whether this rectangle and <em>r2</em> have containment.  Containment is defined as either rectangle
-     * completely encapsulating the other, with no shared edges.
+     * Tests whether this rectangle contains another.  Containment is defined as complete encapsulation, with no shared edges.
      *
-     * @param r2 The rectangle to test containment with
+     * @param r The rectangle to test containment with
      *
-     * @return True if containment exists, false if not
+     * @return <em>true</em> if this rectangle contains <em>r</em>; <em>false</em> if not
      *
-     * @throws IllegalArgumentException If <em>r2</em> is null
+     * @throws IllegalArgumentException If <em>r</em> is null
+     *
+     * @see #isContainedBy(Rectangle)
+     * @see #hasContainmentWith(Rectangle)
      */
-    public boolean hasContainmentWith(final Rectangle r2) {
-        if(r2 == null) throw new IllegalArgumentException("hasContainmentWith:  rectangle cannot be null");
+    public boolean contains(final Rectangle r) {
+        return whoContainsWho(this, r) == this;
+    }
 
-        final double thisLeftX = getLowerLeft().getX();
-        final double thisRightX = getLowerRight().getX();
-        final double thisBottomY = getLowerLeft().getY();
-        final double thisTopY = getUpperRight().getY();
+    /**
+     * Tests whether this rectangle is contained by another.  Containment is defined as complete encapsulation, with no
+     * shared edges.
+     *
+     * @param r The rectangle to test containment with
+     *
+     * @return <em>true</em> if this rectangle is contained by <em>r</em>; <em>false</em> if not
+     *
+     * @throws IllegalArgumentException If <em>r</em> is null
+     *
+     * @see #contains(Rectangle)
+     * @see #hasContainmentWith(Rectangle)
+     */
+    public boolean isContainedBy(final Rectangle r) {
+        return whoContainsWho(this, r) == r;
+    }
 
-        final double r2LeftX = r2.getLowerLeft().getX();
-        final double r2RightX = r2.getLowerRight().getX();
+    /**
+     * <p>Tests whether containment exists between this rectangle and another.  Containment is defined as complete
+     * encapsulation, with no shared edges.</p>
+     *
+     * <p>This method doesn't tell you which rectangle is the container.  Other API methods are available to tell
+     * you this (see below).</p>
+     *
+     * @param r The rectangle to test containment with
+     *
+     * @return <em>true</em> if this rectangle contains <em>r</em>; <em>false</em> if not
+     *
+     * @throws IllegalArgumentException If <em>r</em> is null
+     *
+     * @see #contains(Rectangle)
+     * @see #isContainedBy(Rectangle)
+     */
+    public boolean hasContainmentWith(final Rectangle r) {
+        return whoContainsWho(this, r) != null;
+    }
+
+    /**
+     * Determines whether <em>r1</em> and <em>r2</em> have containment, and tell you which one is the container.
+     * Containment is defined as complete encapsulation, with no shared edges.
+     *
+     * @param r1 Rectangle to test containment with <em>r2</em>
+     * @param r2 Rectangle to test containment with <em>r1</em>
+     *
+     * @return <em>r1</em> if r1 contains r2; <em>r2</em> if r2 contains r1; <em>null</em> if there is no containment
+     *
+     * @throws IllegalArgumentException If <em>r1</em> or <em>r2</em> is null
+     */
+    private static Rectangle whoContainsWho(final Rectangle r1, final Rectangle r2) {
+        if(r1 == null) throw new IllegalArgumentException("rectangle r1 cannot be null");
+        if(r2 == null) throw new IllegalArgumentException("rectangle r2 cannot be null");
+
+        final double thisLeftX   = r1.getLowerLeft().getX();
+        final double thisRightX  = r1.getLowerRight().getX();
+        final double thisBottomY = r1.getLowerLeft().getY();
+        final double thisTopY    = r1.getUpperRight().getY();
+
+        final double r2LeftX   = r2.getLowerLeft().getX();
+        final double r2RightX  = r2.getLowerRight().getX();
         final double r2BottomY = r2.getLowerLeft().getY();
-        final double r2TopY = r2.getUpperRight().getY();
+        final double r2TopY    = r2.getUpperRight().getY();
 
         // It's not enough to check that a left origin (bottom left) is less than another.  To know
         // that it's contained, one has to be less than another AND it has to be bounded by the
-        // right side.  This is represented by the longer comparisons below, wrapped (needlessly)
-        // in parentheses.
+        // right side.  This is represented by the longer comparisons below, wrapped in parentheses.
 
-        final boolean thisContainsR2 =
+        final boolean r1ContainsR2 =
             (thisLeftX  < r2LeftX   && r2LeftX < thisRightX) &&
             thisRightX  > r2RightX  &&
             thisBottomY < r2BottomY &&
             thisTopY    > r2TopY;
 
-        final boolean r2ContainsThis =
+        final boolean r2ContainsR1 =
             (r2LeftX  < thisLeftX   && thisLeftX < r2RightX)  &&
             r2RightX  > thisRightX  &&
             r2BottomY < thisBottomY &&
             r2TopY    > thisTopY;
 
-        return thisContainsR2 || r2ContainsThis;
+        if(r1ContainsR2) return r1;
+        if(r2ContainsR1) return r2;
+
+        return null;
     }
 
     public boolean isAdjacentTo(final Rectangle r) {
