@@ -8,7 +8,9 @@ import java.util.Objects;
 public class Rectangle {
 
     private final Point lowerLeft;
+    private final Point upperLeft;
     private final Point upperRight;
+    private final Point lowerRight;
 
     /**
      * Create a rectangle based on a coordinate system where the lower left corner of the screen is the origin (0,0).
@@ -32,32 +34,35 @@ public class Rectangle {
         }
 
         this.lowerLeft = new Point(lowerLeft.getX(), lowerLeft.getY());
+        this.upperLeft = new Point(lowerLeft.getX(), upperRight.getY());
         this.upperRight = new Point(upperRight.getX(), upperRight.getY());
+        this.lowerRight = new Point(upperRight.getX(), lowerLeft.getY());
     }
 
     /**
      * @return The lower left vertex
      */
     public Point getLowerLeft() {
-        return new Point(lowerLeft.getX(), lowerLeft.getY());
+        return lowerLeft;
     }
 
+    /** @return The upper left vertex */
     public Point getUpperLeft() {
-        return new Point(lowerLeft.getX(), upperRight.getY());
+        return upperLeft;
     }
 
     /**
      * @return The upper right vertex
      */
     public Point getUpperRight() {
-        return new Point(upperRight.getX(), upperRight.getY());
+        return upperRight;
     }
 
     /**
      * @return The lower right vertex
      */
     public Point getLowerRight() {
-        return new Point(upperRight.getX(), lowerLeft.getY());
+        return lowerRight;
     }
 
     /**
