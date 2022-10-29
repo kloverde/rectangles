@@ -79,8 +79,8 @@ public class RectangleTest_isAdjacentTo {
         );
 
         final Rectangle r2 = new Rectangle(
-            new Point(16, 22),
-            new Point(18, 23)
+            new Point(22, 19),
+            new Point(24, 23)
         );
 
         assertTrue(r1.isAdjacentTo(r2));
@@ -174,7 +174,13 @@ public class RectangleTest_isAdjacentTo {
             new Point(24, 18)
         );
 
-        assertTrue(r1.isAdjacentTo(r1));
+        final Rectangle r2 = new Rectangle(
+            new Point(20, 14),
+            new Point(24, 18)
+        );
+
+        assertFalse(r1.isAdjacentTo(r2));
+        assertFalse(r2.isAdjacentTo(r1));
     }
 
     @Test
@@ -201,8 +207,8 @@ public class RectangleTest_isAdjacentTo {
         );
 
         final Rectangle r2 = new Rectangle(
-            new Point(3, 10),
-            new Point(6, 10)
+            new Point(6, 10),
+            new Point(9, 12)
         );
 
         assertFalse(r1.isAdjacentTo(r2));

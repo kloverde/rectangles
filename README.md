@@ -39,4 +39,18 @@ You must be able to determine whether a rectangle is wholly contained within ano
 
 # Adjacency
 
+```
+Implement the ability to detect whether two rectangles are adjacent.
+```
+
+### Definition
+
+**Adjacency** is defined as the sharing of at least one side. Side sharing may be proper, sub-line or partial.
+A sub-line share is a share where one side of rectangle A is a line that exists as a set of points wholly contained on some other side of rectangle B, where partial is one where some line segment on a side of rectangle A exists as a set of points on some side of Rectangle B
+
+### Implementation
+
+* Use `isAdjacentTo` to determine if two rectangles are adjacent. 
+* The Junit tests verify the scenarios illustrated in the diagram below.
+
 ![Diagram with adjacency test scenarios](adjacency.png "Adjacency")

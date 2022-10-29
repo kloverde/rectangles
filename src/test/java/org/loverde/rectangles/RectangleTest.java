@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RectangleTest {
 
+    final Rectangle r = new Rectangle(new Point(5, 20), new Point(10, 30));
+
     @Test
     public void constructor_fail_nullLowerLeft() {
         final Exception ex = assertThrows(IllegalArgumentException.class, () -> new Rectangle(
@@ -89,5 +91,35 @@ public class RectangleTest {
 
         assertEquals(lowerRight, r.getLowerRight());
         assertNotSame(lowerRight, r.getLowerRight());
+    }
+
+    @Test
+    public void getWidth() {
+        assertEquals(5, r.getWidth());
+    }
+
+    @Test
+    public void getHeight() {
+        assertEquals(10, r.getHeight());
+    }
+
+    @Test
+    public void getLeftX() {
+        assertEquals(5, r.getLeftX());
+    }
+
+    @Test
+    public void getRightX() {
+        assertEquals(10, r.getRightX());
+    }
+
+    @Test
+    public void getBottomY() {
+        assertEquals(20, r.getBottomY());
+    }
+
+    @Test
+    public void getTopY() {
+        assertEquals(30, r.getTopY());
     }
 }

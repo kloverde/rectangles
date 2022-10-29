@@ -118,16 +118,15 @@ public class Rectangle {
             Math.min(upperRight.getY(), r.upperRight.getY())
         );
 
-        Rectangle overlap = null;
+        Rectangle intersection = null;
 
         try {
-            overlap = new Rectangle(iRectLowerLeft, iRectUpperRight);
+            intersection = new Rectangle(iRectLowerLeft, iRectUpperRight);
         } catch(IllegalArgumentException e) {
-            // If we've attempted to create an invalid rectangle, that's because there's no
-            // intersection.  Allow null to be returned.
+            // Attempt to create an invalid rectangle means there's no intersection.  Allow null to be returned.
         }
 
-        return overlap;
+        return intersection;
     }
 
     /**
@@ -236,31 +235,21 @@ public class Rectangle {
         if(r1 == null) throw new IllegalArgumentException("rectangle r1 cannot be null");
         if(r2 == null) throw new IllegalArgumentException("rectangle r2 cannot be null");
 
-        final double thisLeftX   = r1.getLowerLeft().getX();
-        final double thisRightX  = r1.getLowerRight().getX();
-        final double thisBottomY = r1.getLowerLeft().getY();
-        final double thisTopY    = r1.getUpperRight().getY();
-
-        final double r2LeftX   = r2.getLowerLeft().getX();
-        final double r2RightX  = r2.getLowerRight().getX();
-        final double r2BottomY = r2.getLowerLeft().getY();
-        final double r2TopY    = r2.getUpperRight().getY();
-
         // It's not enough to check that a left origin (bottom left) is less than another.  To know
         // that it's contained, one has to be less than another AND it has to be bounded by the
         // right side.  This is represented by the longer comparisons below, wrapped in parentheses.
 
         final boolean r1ContainsR2 =
-            (thisLeftX  < r2LeftX   && r2LeftX < thisRightX) &&
-            thisRightX  > r2RightX  &&
-            thisBottomY < r2BottomY &&
-            thisTopY    > r2TopY;
+            (r1.getLeftX()  < r2.getLeftX()   && r2.getLeftX() < r1.getRightX()) &&
+            r1.getRightX()  > r2.getRightX()  &&
+            r1.getBottomY() < r2.getBottomY() &&
+            r1.getTopY()    > r2.getTopY();
 
         final boolean r2ContainsR1 =
-            (r2LeftX  < thisLeftX   && thisLeftX < r2RightX)  &&
-            r2RightX  > thisRightX  &&
-            r2BottomY < thisBottomY &&
-            r2TopY    > thisTopY;
+            (r2.getLeftX()  < r1.getLeftX()   && r1.getLeftX() < r2.getRightX())  &&
+            r2.getRightX()  > r1.getRightX()  &&
+            r2.getBottomY() < r1.getBottomY() &&
+            r2.getTopY()    > r1.getTopY();
 
         if(r1ContainsR2) return r1;
         if(r2ContainsR1) return r2;
@@ -269,11 +258,80 @@ public class Rectangle {
     }
 
     public boolean isAdjacentTo(final Rectangle r) {
-        if(equals(r)) return true;  // Identical, perfectly overlaid rectangles can exit early
+        if(equals(r)) return false;  // Identical, perfectly overlaid rectangles can exit early
 
-        // TODO
+        // To determine whether an edge is shared, first let's visualize which edges we'd be comparing:
+        //   - A top edge of r1 can only touch a bottom edge of r2  - y value match means they're on the same plane
+        //   - A bottom edge of r1 can only touch a top edge of r2  - y value match means they're on the same plane
+        //   - A left edge of r1 can only touch a right edge of r2  - x value match means they're on the same plane
+        //   - A right edge of r1 can only touch a left edge of r2  - x value match means they're on the same plane
+        //
+        // Once you know that a set of edges are on the same plane, check for whether any part of them coincide:
+        //
+        // For vertical edges with the same x value, check their y values to determine if there's overlap.
+        // For horizontal edges with the same y value, check their x values to determine if there's overlap.
+        //
+        // At least one endpoint from the r1 edge must be in the range of r2Start <= r1Endpoint <= r2End
+        // However, this comparison only works if you know the segment you're range-checking is the shorter one, or
+        // if it's the same length - so you need to determine which segment to bound.
+
+        if(getTopY() == r.getBottomY() || getBottomY() == r.getTopY()) {
+            // Horizontal edges have same y:  check x for overlap
+
+            final Rectangle widerOne = getWidth() >= r.getWidth() ? this : r;
+            final double wideLeftX = widerOne.getLowerLeft().getX();
+            final double wideRightX = widerOne.getLowerRight().getX();
+
+            final Rectangle shorterOne = widerOne == this ? r : this;
+            final double shortLeftX = shorterOne.getLowerLeft().getX();
+            final double shortRightX = shorterOne.getLowerRight().getX();
+
+            return (wideLeftX <= shortLeftX && shortLeftX <= wideRightX) || (wideLeftX <= shortRightX && shortRightX <= wideRightX);
+        } else if(getLeftX() == r.getRightX() || getRightX() == r.getLeftX()) {
+            // Vertical edges have same x:  check y for overlap
+
+            final Rectangle tallerOne = getHeight() >= r.getHeight() ? this : r;
+            final double tallBottomY = tallerOne.getLowerLeft().getY();
+            final double tallTopY = tallerOne.getUpperLeft().getY();
+
+            final Rectangle shorterOne = tallerOne == this ? r : this;
+            final double shortBottomY = shorterOne.getLowerLeft().getY();
+            final double shortTopY = shorterOne.getUpperLeft().getY();
+
+            return (tallBottomY <= shortBottomY && shortBottomY <= tallTopY) || (tallBottomY <= shortTopY && shortTopY <= tallTopY);
+        }
 
         return false;
+    }
+
+    /** @return The width of the rectangle */
+    public double getWidth() {
+        return getLowerRight().getX() - getLowerLeft().getX();
+    }
+
+    /** The height of the rectangle */
+    public double getHeight() {
+        return getUpperLeft().getY() - getLowerRight().getY();
+    }
+
+    /** @return The left <em>x</em> boundary */
+    public double getLeftX() {
+        return lowerLeft.getX();
+    }
+
+    /** @return The right <em>x</em> boundary */
+    public double getRightX() {
+        return getLowerRight().getX();
+    }
+
+    /** @return The lower <em>y</em> boundary */
+    public double getBottomY() {
+        return getLowerLeft().getY();
+    }
+
+    /** @return The upper <em>y</em> boundary */
+    public double getTopY() {
+        return getUpperLeft().getY();
     }
 
     private static boolean isPointOnAnEdgeOf(final Point p, final Rectangle r) {
