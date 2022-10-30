@@ -91,7 +91,7 @@ public class Rectangle {
         //     black rectangle's left edge.  The larger value is the x-intersection.
         //
         //   * Let's say the intersecting rectangle is #2.  How do we get the X value of intersection point i2?
-        //     Look at the x value of the #2's origin.  Compare this to the origin of the black rectangle.  Once again,
+        //     Look at the x value of #2's origin.  Compare this to the origin of the black rectangle.  Once again,
         //     the larger value is the x-intersection - but this time, the red rectangle gave us the value instead of
         //     the black rectangle.  It doesn't matter which one it comes from - the highest value always wins.
         //
@@ -101,16 +101,15 @@ public class Rectangle {
         //
         //   * Let's say the intersecting rectangle is #1.  How do we get the Y value of intersection point i1?
         //     Look at the y value of #1's origin.  Compare this to the origin of the black rectangle.  The highest
-        //     value wins.  Notice a pattern?  You've probably realized by now that you don't need to look at another
-        //     example to know that this rule will hold.
+        //     value wins.
         //
         //   Conclusion:  use max() of the y values
         //
         // GETTING THE TOP-RIGHT VERTEX:
         //
-        //   Similar thinking will get you most of the way there.  This time, you're comparing the top-right vertices
-        //   of the two rectangles.  However, since we're comparing a top vertex instead of a bottom vertex, we need
-        //   to use min() instead of max(), otherwise we won't cross into the black rectangle.
+        //   This time, you're comparing the top-right vertices of the two rectangles.  However, since we're comparing
+        //   a top vertex instead of a bottom vertex, we need to use min() instead of max(), otherwise we won't cross
+        //   into the black rectangle.
         //
         //   Conclusion:  use min() of the y values
         final Point iRectLowerLeft = new Point(
