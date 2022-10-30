@@ -213,7 +213,7 @@ public class Rectangle {
      *
      * @param r The rectangle to test containment with
      *
-     * @return <em>true</em> if this rectangle contains <em>r</em>; <em>false</em> if not
+     * @return <em>true</em> if one of these rectangles contains the other; <em>false</em> if not
      *
      * @throws IllegalArgumentException If <em>r</em> is null
      *
