@@ -147,7 +147,7 @@ public class RectangleTest_getIntersection {
     // See intersection.png, rectangle #9
     @Test
     public void getIntersection_9_bottomHalf() {
-        final Rectangle r1 = new Rectangle(new Point(8, 18), new Point(10, 20));   // black
+        final Rectangle r1 = new Rectangle(new Point(8, 18), new Point(10, 20));  // black
         final Rectangle r2 = new Rectangle(new Point(8, 17), new Point(10, 19));  // orange
 
         final Rectangle expectedIntersection = new Rectangle(new Point(8, 18), new Point(10, 19));
@@ -160,7 +160,7 @@ public class RectangleTest_getIntersection {
     @Test
     public void getIntersection_10_topHalf() {
         final Rectangle r1 = new Rectangle(new Point(11, 18), new Point(13, 20));  // orange
-        final Rectangle r2 = new Rectangle(new Point(11, 17), new Point(13, 19));   // black
+        final Rectangle r2 = new Rectangle(new Point(11, 17), new Point(13, 19));  // black
 
         final Rectangle expectedIntersection = new Rectangle(new Point(11, 18), new Point(13, 19));
 
@@ -172,7 +172,7 @@ public class RectangleTest_getIntersection {
     @Test
     public void getIntersection_11_upperRightCorner() {
         final Rectangle r1 = new Rectangle(new Point(1, 3), new Point(7, 8));  // red
-        final Rectangle r2 = new Rectangle(new Point(0, 2), new Point(2, 4));   // blue
+        final Rectangle r2 = new Rectangle(new Point(0, 2), new Point(2, 4));  // blue
 
         final Rectangle expectedIntersection = new Rectangle(new Point(1, 3), new Point(2, 4));
 
@@ -184,7 +184,7 @@ public class RectangleTest_getIntersection {
     @Test
     public void getIntersection_12_upperLeftCorner() {
         final Rectangle r1 = new Rectangle(new Point(13, 3), new Point(19, 8));  // red
-        final Rectangle r2 = new Rectangle(new Point(18, 2), new Point(20, 4));   // blue
+        final Rectangle r2 = new Rectangle(new Point(18, 2), new Point(20, 4));  // blue
 
         final Rectangle expectedIntersection = new Rectangle(new Point(18, 3), new Point(19, 4));
 
